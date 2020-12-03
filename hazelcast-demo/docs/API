@@ -1,0 +1,22 @@
+----------------------------------------------------------------------------------
+getUserById::
+GET ::
+http://localhost:8085/hazelcast-service/api/v1/users/{userId}
+----------------------------------------------------------------------------------
+deleteUser::
+GET::
+http://localhost:8085/hazelcast-service/api/v1/users/{userId}
+----------------------------------------------------------------------------------
+updateUser::
+PUT::
+http://localhost:8085/hazelcast-service/api/v1/users/{userId}
+Request Body
+{
+"username": "updated_user",
+"email": "update_email@solution.com"
+}
+
+-----------------------------------------------------------------------------------
+metrics api
+GET :
+http://localhost:8085/hazelcast-service/api/actuator/metrics
