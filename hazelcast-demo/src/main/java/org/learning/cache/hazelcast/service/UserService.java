@@ -39,8 +39,8 @@ public class UserService {
     public Users updateUser(Integer userId, Users users) {
         Users existingUser = userRepository.findById(userId).get();
         if (existingUser != null) {
-            existingUser.setEmail(users.getEmail());
-            existingUser.setUsername(users.getUsername());
+//            existingUser.setEmail(users.getEmail());
+//            existingUser.setUsername(users.getUsername());
             userRepository.save(existingUser);
         }
         return existingUser;

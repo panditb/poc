@@ -79,3 +79,84 @@ Typical use-cases for Hazelcast include:
 * Spring Cache
 * Web Session clustering
 
+*Cache Access Patterns*
+
+Read-Through Cache
+
+* In a read-through pattern, applications request data directly from the caching system, and if the data exists in the cache, that data is returned to the application. If the data does not exist, then the system retrieves the data from the underlying backend store. The system then loads that data into the cache and returns the data to the backend store.
+
+* Hazelcast IMDG handles the entire process so the application does not need to coordinate reads from the underlying store upon cache misses. To establish the link between IMDG and the backend store, application developers write pluggable query code that is executed by Hazelcast in the event of a cache miss.
+
+image::Read-Through.png[]
+
+*Write-Through Cache*
+
+* In a write-through pattern, applications can directly update data in the cache, and whenever that is done, the updated data is synchronously and automatically persisted to the backend data store.
+* This pattern is about ensuring the cache and backend store are synchronized and is not intended to address performance, since the backend store is still the bottleneck in an update process.
+
+image::Write-Through.png[]
+
+*Write-Behind Cache*
+
+* In a write-behind pattern, applications can update data in the cache similarly to the write-through cache pattern, except the automatic updates to the backend store are asynchronous. This means this pattern offers a performance advantage since updates to the data do not have to wait for writes to the backend store. Updates to data in the cache are acknowledged quickly since only in-memory data is updated, and Hazelcast IMDG will later push the data updates to the backend store.
+* To improve performance, write-behind caching uses a technique known as conflation, in which changes to the cache are consolidated in order to limit the number of transactions needed to update the database. For example, if a value is changed from 1 to 2 in the cache, and then later from 2 to 3, the database will only be updated to change the value from 1 to 3.
+* As long as the time limit is not too long, write-behind caching may still deliver acceptable protection from system failures. However, the risk of data loss is greater when using write-behind caching. If the system goes down, any changes to the cache data may not have yet been sent to the database.
+
+image::Write-Behind.png[]
+
+*Near Cache*
+
+* It is highly recommended for data structures that are mostly read. When an object is fetched from a remote Hazelcast member, it is inserted into the local cache, so subsequent requests are handled by a local member retrieving from the local cache. If Hazelcast near cache features in client-server deployments are being used, microsecond response times can be achieved with the right serialization.
+
+image::NearCache.png[]
+
+Caching Architectural Patterns
+
+*Embedded Cache*
+
+The simplest possible caching pattern is Embedded Cache.
+
+* Request comes in to the Load Balancer
+* Load Balancer forwards the request to one of the Application services
+* Application receives the request and checks if the same request was already executed (and stored in cache)
+* If yes, then return the cached value
+* If not, then perform the long-lasting business operation, store the result in the cache, and return the result
+
+image::Pattern-1.png[]
+
+*Embedded Distributed Cache*
+
+* It's still the same pattern as Embedded Cache; however, this time we’ll use Hazelcast instead of the default non-distributed cache library.
+
+image::Embedded Distributed Cache.png[]
+
+*Client-Server Cache*
+
+*  Request comes into the Load Balancer and is forwarded to one of the Application services
+* Application uses cache client to connect to Cache Server
+* If there is no value found, then perform the usual business logic, cache the value, and return the response
+
+image::client-server.png[]
+
+*Sidecar Cache*
+
+* The Kubernetes-specific, because the Sidecar pattern is mostly seen in (but not limited to) Kubernetes environments. In Kubernetes, a deployment unit is called a POD. This POD contains one or more containers which are always deployed on the same physical machine. Usually, a POD contains only one container with the application itself. However, in some cases, you can include not only the application container but some additional containers which provide additional functionalities. These containers are called sidecar containers.
+
+This time, the flow looks as follows:
+
+* Request comes to the Kubernetes Service (Load Balancer) and is forwarded to one of the PODs
+* Request comes to the Application Container and Application uses the cache client to connect to the Cache Container (technically Cache Server is always available at localhost)
+
+This solution is a mixture of the Embedded and Client-Server patterns. It’s similar to Embedded Cache, because:
+
+* Cache is always at the same machine as the application (low latency)
+* Resource pool and management activities are shared between cache and application
+* Cache cluster discovery is not an issue (it’s always available at localhost)
+
+It’s also similar to the Client-Server pattern, because:
+
+* Application can be written in any programming language (it uses the cache client library for communication)
+* There is some isolation of cache and application
+
+image::Sidecar.png[]
+

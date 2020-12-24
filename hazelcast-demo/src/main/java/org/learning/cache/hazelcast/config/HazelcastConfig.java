@@ -16,11 +16,9 @@ public class HazelcastConfig {
     @Bean
     public Config hazelCastConfig() {
         Config config = new Config().setInstanceName("hazelcast-instance");
-        //config.getManagementCenterConfig().setEnabled(true);
-        //config.getManagementCenterConfig().setUrl("http://localhost:8080/mancenter");
 
         return config.addMapConfig(new MapConfig().setName("userCache")
                         .setMaxSizeConfig(new MaxSizeConfig(200, MaxSizeConfig.MaxSizePolicy.FREE_HEAP_SIZE))
-                        .setEvictionPolicy(EvictionPolicy.LRU).setTimeToLiveSeconds(10));
+                        .setEvictionPolicy(EvictionPolicy.LRU).setTimeToLiveSeconds(200));
     }
 }
