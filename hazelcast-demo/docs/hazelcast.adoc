@@ -79,6 +79,60 @@ Typical use-cases for Hazelcast include:
 * Spring Cache
 * Web Session clustering
 
+*Hazelcast Architecture*
+
+image::HazelcastArchitecture.png[]
+
+[TIP]
+You can see small "HD" boxes for some features in the above diagram. Those features can use High-Density (HD) Memory Store when it is available. It means if you have Hazelcast IMDG Enterprise HD, you can use those features with HD Memory Store.
+
+* Hazelcast is an inMemory Data Grid
+* Hazelcast is an extension of ConcurrentHashMap, here Object shared between multiple jvms.
+* Discovery Mechanism being use to connect JVM's (Node)
+* Data stored in-memory(RAM) of the server, since its incredibly fast.
+* Multiple copies are stored in multiple machines for automatic data recovery in case of fauilure.
+
+*Data Partitioning*
+
+* Why? Hazelcast stores data in partition, Fast Data operation across cluster.
+* By default, Hazelcast creates a single copy/replica of each partition.
+* You can configure Hazelcast so that each partition can have multiple replicas. One of these replicas is called "primary" and others are called "backups
+* The cluster member which owns the "primary" replica of a partition is called the "partition owner". When you read or write a particular data entry, you transparently talk to the partition owner that contains the data entry
+* By default, Hazelcast offers 271 partitions. When you start a cluster with a single member, it owns all of 271 partitions (i.e., it keeps primary replicas for 271 partitions). The following illustration shows the partitions in a Hazelcast cluster with single member.
+
+image::NodePartition.jpg[]
+* When you start a second member on that cluster (creating a Hazelcast cluster with two members), the partition replicas are distributed as shown in the illustration here.
+
+image::BackupPartitions.jpg[]
+* In the illustration, the partition replicas with black text are primaries and the partition replicas with blue text are backups
+* The first member has primary replicas of 135 partitions (black) and each of these partitions are backed up in the second member (i.e., the second member owns the backup replicas) (blue)
+* same time, the first member also has the backup replicas of the second member’s primary partition replicas.
+
+*How Data is Partitioned*
+
+Hazelcast distributes data entries into the partitions using a hashing algorithm.
+
+* the key or name is serialized (converted into a byte array)
+* this byte array is hashed
+* the result of the hash is mod by the number of partitions.
+* The result of this modulo - MOD(hash result, partition count) - is the partition in which the data will be stored,that is the partition ID.
+*  For ALL members you have in your cluster, the partition ID for a given key is always the same.
+
+*Partition Table*
+
+* When you start a member, a partition table is created within it. This table stores the partition IDs and the cluster members to which they belong.
+* The purpose of this table is to make all members (including lite members) in the cluster aware of this information, making sure that each member knows where the data is.
+* The oldest member in the cluster (the one that started first) periodically sends the partition table to all members
+* The ownerships may be changed when, for example, a new member joins the cluster, or when a member leaves the cluster
+* You can configure the frequency (how often) that the member sends the partition table the information by using the hazelcast.partition.table.send.interval(default 15sec) system property
+
+*Repartitioning*
+
+* Repartitioning is the process of redistribution of partition ownerships
+* Hazelcast performs the repartitioning when a member joins or leaves the cluster.
+* In these cases, the partition table in the oldest member is updated with the new partition ownerships
+* Note that if a lite member joins or leaves a cluster, repartitioning is not triggered since lite members do not own any partitions
+
 *Cache Access Patterns*
 
 Read-Through Cache
