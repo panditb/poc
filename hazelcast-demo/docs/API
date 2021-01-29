@@ -20,3 +20,13 @@ Request Body
 metrics api
 GET :
 http://localhost:8085/hazelcast-service/api/actuator/metrics
+
+---------------------------------------
+
+Hazelcast load all data API
+http://localhost:8085/hazelcast-service/api/v1/locations/load-all
+
+Hazelcast read sql query
+http://localhost:8085/hazelcast-service/api/v1/locations/cache?locationId=1
+http://localhost:8085/hazelcast-service/api/v1/locations/cache?locationId=1&&accountId=acc-11&&currency=USD
+http://localhost:8085/hazelcast-service/api/v1/locations/cache?currency=EUR
