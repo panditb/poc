@@ -1,10 +1,12 @@
 package org.learning.cache.hazelcast.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * Entity table for User
@@ -12,6 +14,9 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name="location")
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Location implements Serializable {
 
     private static final long serialVersionUID=1L;

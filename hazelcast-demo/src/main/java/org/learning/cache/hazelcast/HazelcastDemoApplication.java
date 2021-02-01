@@ -1,5 +1,6 @@
 package org.learning.cache.hazelcast;
 
+import com.hazelcast.core.HazelcastInstance;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;

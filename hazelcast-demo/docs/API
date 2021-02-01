@@ -30,3 +30,11 @@ Hazelcast read sql query
 http://localhost:8085/hazelcast-service/api/v1/locations/cache?locationId=1
 http://localhost:8085/hazelcast-service/api/v1/locations/cache?locationId=1&&accountId=acc-11&&currency=USD
 http://localhost:8085/hazelcast-service/api/v1/locations/cache?currency=EUR
+
+
+Hazelcast MapStore example
+
+Hazelcast load all data API
+http://localhost:8085/hazelcast-service/api/v1/locations/store
+http://localhost:8085/hazelcast-service/api/v1/locations/load/1
+
