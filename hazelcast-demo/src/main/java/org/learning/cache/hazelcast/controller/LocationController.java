@@ -16,9 +16,6 @@ public class LocationController {
     @Autowired
     private LocationStore locationStore;
 
-
-
-
     @GetMapping("/store")
     public void store() {
         locationStore.store(new Random().nextInt(),location(new Random().nextInt()));

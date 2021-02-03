@@ -1,6 +1,6 @@
 package org.learning.cache.hazelcast.store;
 
-import com.hazelcast.core.MapStore;
+import com.hazelcast.map.MapStore;
 import org.learning.cache.hazelcast.entity.Location;
 import org.learning.cache.hazelcast.repository.ILocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;

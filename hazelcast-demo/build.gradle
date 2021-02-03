@@ -13,7 +13,7 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-cache'
+//	implementation 'org.springframework.boot:spring-boot-starter-cache'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -21,8 +21,9 @@ dependencies {
 	//implementation 'com.graphql-java:graphql-java:11.0'
 	//implementation 'com.graphql-java:graphql-java-spring-boot-starter-webmvc:1.0'
 
-	compile 'com.hazelcast:hazelcast'
-	compile 'com.hazelcast:hazelcast-spring'
+	// https://mvnrepository.com/artifact/com.hazelcast/hazelcast
+	//compile group: 'com.hazelcast', name: 'hazelcast', version: '4.1.1'
+	compile group: 'com.hazelcast', name: 'hazelcast-all', version: '4.1.1'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	runtimeOnly 'mysql:mysql-connector-java'
