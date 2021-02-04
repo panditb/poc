@@ -4,5 +4,9 @@ hazelcast:
       - 127.0.0.1:5701
     smart-routing: false
     join:
-      multicast:
-        enabled: true
+      tcp-ip:
+        enabled: false
+  user-code-deployment:
+    enabled: true
+    class-cache-mode: ETERNAL
+    provider-mode: LOCAL_CLASSES_ONLY
