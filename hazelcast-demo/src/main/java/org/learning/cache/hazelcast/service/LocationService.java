@@ -52,6 +52,12 @@ public class LocationService {
             if (result != null) {
                 return   result.stream().collect(Collectors.toList());
             }
+        } else if (accountId != null && currency != null) {
+            String query = " accountId =" + accountId + " AND currency =" + currency;
+            Collection<Location> result = locationIMap.values(new SqlPredicate(query));
+            if (result != null) {
+                return result.stream().collect(Collectors.toList());
+            }
         }
         return new ArrayList<>();
     }
