@@ -1,11 +1,5 @@
 hazelcast-client:
-  user-code-deployment:
-    enabled: true
-    jarPaths:
-      - build\libs\hazelcast-demo-0.0.1-SNAPSHOT.jar
-    classNames:
-      - org.learning.cache.hazelcast.entity.Location
   network:
     cluster-members:
-      - 127.0.0.1:5701
+      address: 127.0.0.1:5701
     smart-routing: false
