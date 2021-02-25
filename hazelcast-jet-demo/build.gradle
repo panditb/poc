@@ -23,6 +23,12 @@ dependencies {
 	runtimeOnly 'mysql:mysql-connector-java'
 	// https://mvnrepository.com/artifact/javax.cache/cache-api
 	implementation group: 'javax.cache', name: 'cache-api', version: '1.1.1'
+	// https://mvnrepository.com/artifact/com.hazelcast.jet/hazelcast-jet-cdc-debezium
+	implementation group: 'com.hazelcast.jet', name: 'hazelcast-jet-cdc-debezium', version: '4.2'
+	// https://mvnrepository.com/artifact/com.hazelcast.jet/hazelcast-jet-cdc-mysql
+	implementation group: 'com.hazelcast.jet', name: 'hazelcast-jet-cdc-mysql', version: '4.2'
+	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.11.0'
+
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

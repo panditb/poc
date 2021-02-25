@@ -56,7 +56,5 @@ public class LocationJDBCJetJob {
                 .region(resultSet.getString("region"))
                 .isActive(resultSet.getBoolean("is_active"))
                 .build();
-
     }
-
 }
