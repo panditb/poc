@@ -44,7 +44,6 @@ public class LocationJDBCJetJob {
 
         jet.newJob(p,j).join();
 
-        jet.getMap(MAP_NAME).values().forEach(System.out::println);
     }
 
     private static Location buildLocation(ResultSet resultSet) throws SQLException {

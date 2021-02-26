@@ -34,6 +34,8 @@ public class LocationService {
 
     public List<Location> locations(Integer id, String accountId, String currency) {
         IMap<Integer, Location> locationIMap = hazelcastInstance.getMap("location");
+
+
         if (id != null && accountId != null && currency != null) {
             String query = "locationId = " + id + " AND accountId =" + accountId + " AND currency =" + currency;
             Collection<Location> result = locationIMap.values(new SqlPredicate(query));
