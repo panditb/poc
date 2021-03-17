@@ -1,0 +1,7 @@
+server:
+  port: 8085
+
+hazelcast:
+  client.file: hazelcast-client-local.yaml
+  jet.file: hazelcast-jet-local.yaml
+

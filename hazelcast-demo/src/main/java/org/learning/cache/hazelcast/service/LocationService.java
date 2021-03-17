@@ -4,8 +4,9 @@ package org.learning.cache.hazelcast.service;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
 import com.hazelcast.query.impl.predicates.SqlPredicate;
-import org.learning.cache.hazelcast.entity.Location;
+import lombok.extern.slf4j.Slf4j;
 import org.learning.cache.hazelcast.repository.ILocationRepository;
+import org.learning.hazelcast.jet.dto.Location;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class LocationService {
 
     @Autowired
@@ -24,15 +26,15 @@ public class LocationService {
     private HazelcastInstance hazelcastInstance;
 
     public void loadAllDataInCache() {
-        IMap<Integer, Location> locationIMap = hazelcastInstance.getMap("location");
+        IMap<Integer, Location> locationIMap = hazelcastInstance.getMap("locationSingleMap");
 
-        Iterable<Location> locations = locationRepository.findAll();
-        locations.forEach(l -> {
-            locationIMap.put(l.getLocationId(), l);
-        });
+        /*Iterable<Location> locations = locationRepository.findAll();
+        locations.forEach(l -> {*/
+            locationIMap.put(12345, new Location(12345,"loca1","accont", "USD", "REGION", true));
+       // });
     }
 
-    public List<Location> locations(Integer id, String accountId, String currency) {
+    public List<org.learning.hazelcast.jet.dto.Location> locations(Integer id, String accountId, String currency) {
         IMap<Integer, Location> locationIMap = hazelcastInstance.getMap("location");
 
 

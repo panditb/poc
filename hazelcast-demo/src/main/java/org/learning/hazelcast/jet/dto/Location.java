@@ -17,7 +17,7 @@ import java.io.IOException;
 @NoArgsConstructor
 public class Location implements Portable {
 
-    public final static int     ID = 5;
+    public final static int ID = 5;
 
     private Integer locationId;
 

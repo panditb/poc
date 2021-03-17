@@ -48,13 +48,10 @@ hazelcast:
           endpoint-groups:
             HEALTH_CHECK:
               enabled: true
-      user-code-deployment:
-        enabled: true
-        class-cache-mode: ETERNAL
-        provider-mode: LOCAL_AND_CACHED_CLASSES
-        blacklist-prefixes: org.springframework
-        whitelist-prefixes: org.learning.cache.hazelcast.entity.Location
-        provider-filter: HAS_ATTRIBUTE:lite
+      map:
+        default:
+          in-memory-format: OBJECT
+        #provider-filter: HAS_ATTRIBUTE:lite
   # configurationFiles are any additional Hazelcast configuration files
   # configurationFiles:
 

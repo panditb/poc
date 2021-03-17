@@ -1,7 +1,8 @@
 package org.learning.cache.hazelcast.controller;
 
-import org.learning.cache.hazelcast.entity.Location;
+
 import org.learning.cache.hazelcast.service.LocationService;
+import org.learning.hazelcast.jet.dto.Location;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

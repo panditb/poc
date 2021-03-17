@@ -1,6 +1,7 @@
 package org.learning.hazelcast.jet.job;
 
 import com.hazelcast.client.config.ClientConfig;
+import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.function.FunctionEx;
 import com.hazelcast.jet.JetInstance;
 import com.hazelcast.jet.Util;
@@ -11,13 +12,19 @@ import com.hazelcast.jet.pipeline.Pipeline;
 import com.hazelcast.jet.pipeline.Sink;
 import com.hazelcast.jet.pipeline.Sinks;
 import com.hazelcast.jet.pipeline.StreamSource;
+import com.hazelcast.map.IMap;
+import com.hazelcast.query.impl.predicates.SqlPredicate;
 import lombok.extern.slf4j.Slf4j;
 import org.learning.hazelcast.jet.dto.Location;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.hazelcast.jet.cdc.mysql.MySqlCdcSources;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -30,6 +37,9 @@ public class LocationCDCJetJob {
 
     @Autowired
     private JetInstance jet;
+
+    @Autowired
+    private HazelcastInstance hazelcastInstance;
 
     public void submitMysqlCDCJob() {
         log.info(" submitMysqlCDCJob start");
@@ -71,5 +81,37 @@ public class LocationCDCJetJob {
         return Sinks.remoteMap(
                 "location_cdc_cache",
                 config);
+    }
+
+    public List<Location> locations(Integer id, String accountId, String currency) {
+        IMap<Integer, Location> locationIMap = hazelcastInstance.getMap("locationSingleMap");
+
+
+        if (id != null && accountId != null && currency != null) {
+            String query = "locationId = " + id + " AND accountId =" + accountId + " AND currency =" + currency;
+            Collection<Location> result = locationIMap.values(new SqlPredicate(query));
+            if (result != null) {
+                return result.stream().collect(Collectors.toList());
+            }
+        }
+        else if (currency != null) {
+            Collection<Location> result = locationIMap.values(new SqlPredicate("currency =" + currency));
+            if (result != null) {
+                return   result.stream().collect(Collectors.toList());
+            }
+        }
+        else if (id != null) {
+            Collection<Location> result = locationIMap.values(new SqlPredicate("locationId = " + id));
+            if (result != null) {
+                return   result.stream().collect(Collectors.toList());
+            }
+        } else if (accountId != null && currency != null) {
+            String query = " accountId =" + accountId + " AND currency =" + currency;
+            Collection<Location> result = locationIMap.values(new SqlPredicate(query));
+            if (result != null) {
+                return result.stream().collect(Collectors.toList());
+            }
+        }
+        return new ArrayList<>();
     }
 }
