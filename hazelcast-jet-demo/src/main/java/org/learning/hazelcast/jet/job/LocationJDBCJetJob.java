@@ -9,6 +9,7 @@ import com.hazelcast.jet.pipeline.Pipeline;
 import com.hazelcast.jet.pipeline.Sinks;
 import com.hazelcast.jet.pipeline.Sources;
 import com.hazelcast.map.IMap;
+import com.hazelcast.query.Predicates;
 import com.hazelcast.query.impl.predicates.SqlPredicate;
 import org.learning.hazelcast.jet.dto.Location;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,28 +72,29 @@ public class LocationJDBCJetJob {
 
 
         if (id != null && accountId != null && currency != null) {
-            String query = "locationId = " + id + " AND accountId =" + accountId + " AND currency =" + currency;
+            String query = "l = " + id + " AND a =" + accountId + " AND c =" + currency;
+            Collection<Location> result = locationIMap.values(new SqlPredicate(query));
+            if (result != null) {
+                return result.stream().collect(Collectors.toList());
+            }
+        }
+        else if (accountId != null && currency != null) {
+            String query = " a =" + accountId + " AND c =" + currency;
             Collection<Location> result = locationIMap.values(new SqlPredicate(query));
             if (result != null) {
                 return result.stream().collect(Collectors.toList());
             }
         }
         else if (currency != null) {
-            Collection<Location> result = locationIMap.values(new SqlPredicate("currency =" + currency));
+            Collection<Location> result = locationIMap.values(new SqlPredicate("c =" + currency));
             if (result != null) {
                 return   result.stream().collect(Collectors.toList());
             }
         }
         else if (id != null) {
-            Collection<Location> result = locationIMap.values(new SqlPredicate("locationId = " + id));
+            Collection<Location> result = locationIMap.values(Predicates.sql("l = " + id));
             if (result != null) {
                 return   result.stream().collect(Collectors.toList());
-            }
-        } else if (accountId != null && currency != null) {
-            String query = " accountId =" + accountId + " AND currency =" + currency;
-            Collection<Location> result = locationIMap.values(new SqlPredicate(query));
-            if (result != null) {
-                return result.stream().collect(Collectors.toList());
             }
         }
         return new ArrayList<>();

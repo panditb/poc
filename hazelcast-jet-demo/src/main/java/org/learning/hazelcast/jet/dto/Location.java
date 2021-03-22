@@ -52,12 +52,12 @@ public class Location implements Portable {
 
     @Override
     public void readPortable(PortableReader reader) throws IOException {
-        reader.readInt("l");
-        reader.readUTF("n" );
-        reader.readUTF("a");
-        reader.readUTF("c");
-        reader.readUTF("r");
-        reader.readBoolean("isA");
+        locationId= reader.readInt("l");
+        name= reader.readUTF("n" );
+        accountId =reader.readUTF("a");
+        currency= reader.readUTF("c");
+        region =reader.readUTF("r");
+        isActive= reader.readBoolean("isA");
 
     }
 }
