@@ -48,4 +48,5 @@ public class LocationService {
         return locationJDBCJetJob.locations(id,accountId,currency);
     }
 
+
 }

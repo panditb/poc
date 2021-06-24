@@ -15,7 +15,9 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter'
-	implementation 'com.hazelcast.jet.contrib:hazelcast-jet-spring-boot-starter:2.0.1'
+	// https://mvnrepository.com/artifact/com.hazelcast.jet/hazelcast-jet
+	implementation group: 'com.hazelcast.jet', name: 'hazelcast-jet', version: '4.5'
+	implementation group: 'com.hazelcast', name: 'hazelcast', version: '4.2'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'

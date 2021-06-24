@@ -11,12 +11,14 @@ import com.hazelcast.jet.pipeline.Sources;
 import com.hazelcast.map.IMap;
 import com.hazelcast.query.Predicates;
 import com.hazelcast.query.impl.predicates.SqlPredicate;
+import org.learning.hazelcast.jet.dto.DateConverter;
 import org.learning.hazelcast.jet.dto.Location;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -25,7 +27,7 @@ import java.util.stream.Collectors;
 @Component
 public class LocationJDBCJetJob {
 
-    private static final String MAP_NAME = "locationCache";
+    private static final String MAP_NAME = "locationCache4";
     private static final String TABLE_NAME = "location";
 
     @Autowired
@@ -64,11 +66,13 @@ public class LocationJDBCJetJob {
                 .currency(resultSet.getString("currency"))
                 .region(resultSet.getString("region"))
                 .isActive(resultSet.getBoolean("is_active"))
+                .calendarDate(resultSet.getDate("calendarDate"))
+                .localDate(DateConverter.sqlDateToLocalDate(resultSet.getDate("localDate")))
                 .build();
     }
 
     public List<Location> locations(Integer id, String accountId, String currency) {
-        IMap<Integer, Location> locationIMap = hazelcastInstance.getMap("locationCache");
+        IMap<Integer, Location> locationIMap = hazelcastInstance.getMap(MAP_NAME);
 
 
         if (id != null && accountId != null && currency != null) {
@@ -86,17 +90,22 @@ public class LocationJDBCJetJob {
             }
         }
         else if (currency != null) {
-            Collection<Location> result = locationIMap.values(new SqlPredicate("c =" + currency));
+            String q = "c =" + currency +" AND calendarDate >= 2021-02-28";
+            Collection<Location> result = locationIMap.values(new SqlPredicate(q));
             if (result != null) {
                 return   result.stream().collect(Collectors.toList());
             }
         }
         else if (id != null) {
-            Collection<Location> result = locationIMap.values(Predicates.sql("l = " + id));
+            LocalDate from  = LocalDate.of(2021,02,28);
+            LocalDate toDate = LocalDate.of(2021,05,12);
+           String q = "is_active=1 AND localDate = "+from ;
+            Collection<Location> result = locationIMap.values(Predicates.greaterEqual("localDate",from));
             if (result != null) {
                 return   result.stream().collect(Collectors.toList());
             }
         }
+
         return new ArrayList<>();
     }
 }
